@@ -63,4 +63,20 @@ public class GameDirector : MonoBehaviour
         fadeImage.color = new Color(fadeColor.r, fadeColor.g, fadeColor.b, 0);
         fader.SetActive(false);
     }
+
+    public void MoneyModify(int amount)
+    {
+        stat_Money += amount;
+        moneyAmount.text = "$ " + stat_Money.ToString();
+    }
+    public void HappinessModify(float amount)
+    {
+        stat_Happy += amount;
+        happiness.value = stat_Happy;
+    }
+    public void SocialModify(float amount)
+    {
+        stat_Social += amount;
+        socialisation.value = stat_Social;
+    }
 }
