@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: c99bb56b31ba78f48a83e71513740746
+guid: c661f9d62933aeb458fd0c915203b176
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 3873182654667806904
-    second: food_stall_front_south_0
+      213: 5307958571244974569
+    second: chef_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -126,13 +126,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: food_stall_front_south_0
+      name: chef_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 816
-        height: 816
+        width: 128
+        height: 128
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -141,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 8b8dda97a1f40c530800000000000000
-      internalID: 3873182654667806904
+      spriteID: 9e1fb81a238a9a940800000000000000
+      internalID: 5307958571244974569
       vertices: []
       indices: 
       edges: []
@@ -161,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      food_stall_front_south_0: 3873182654667806904
+      chef_0: 5307958571244974569
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
