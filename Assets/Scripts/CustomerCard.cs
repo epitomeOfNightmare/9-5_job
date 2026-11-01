@@ -1,16 +1,21 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CustomerCard : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    public Image character;
+    public Sprite characterCover, characterImage;
+    public DeliveryManager deliveryManager;
+    private string selectedCharacter;
+
     void Start()
     {
-        
+
     }
 
-    // Update is called once per frame
-    void Update()
+    public void PassCharacter(Sprite image, string name)
     {
-        
+        characterImage = image;
+        selectedCharacter = name;
     }
 }

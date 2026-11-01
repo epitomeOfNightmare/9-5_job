@@ -7,11 +7,15 @@ public class FoodCard : MonoBehaviour
     public Sprite foodCover, foodImage;
     public DeliveryManager deliveryManager;
     private string selectedFood;
-    [SerializeField] private string foodOptions;
-    [SerializeField] private Sprite foodImageOptions;
 
     void Start()
     {
         
+    }
+
+    public void PassFood(Sprite image, string name)
+    {
+        foodImage = image;
+        selectedFood = name;
     }
 }
