@@ -23,8 +23,8 @@ public class DeliveryManager : MonoBehaviour
     [SerializeField] private GameObject[] cardSlots;
     public GameObject characterCard;
     public GameObject foodCard;
-    private bool characterSelected = false;
-    private bool foodSelected = false;
+    private GameObject characterSelected = null;
+    private GameObject foodSelected = null;
     private string characterName;
     private string foodName;
 
@@ -88,7 +88,7 @@ public class DeliveryManager : MonoBehaviour
         List<string> cNames = new List<string>();
         List<Sprite> fSprites = new List<Sprite>();
         List<string> fNames = new List<string>();
-        List<CustomerOrder> tempOrders = orders;
+        List<CustomerOrder> tempOrders = new List<CustomerOrder>(orders);
 
         for ( int i = 0; i < totalCards; i++ )
         {
@@ -142,5 +142,60 @@ public class DeliveryManager : MonoBehaviour
                 cNames.RemoveAt(characterIndex);
             }
         }
+    }
+
+    public void ReceiveCharacter(GameObject card, string name)
+    {
+        characterSelected = card;
+        characterName = name;
+
+        MatchCards();
+    }
+    public void ReceiveFood(GameObject card, string name)
+    {
+        foodSelected = card;
+        foodName = name;
+
+        MatchCards();
+    }
+    public bool CanFlipCharacter()
+    {
+        if (characterSelected != null) return false;
+        else return true;
+    }
+    public bool CanFlipFood()
+    {
+        if (foodSelected != null) return false;
+        else return true;
+    }
+    private void MatchCards()
+    {
+        if (characterSelected == null || foodSelected == null) return;
+
+        for (int i = 0; i < totalActiveOrder; i++)
+        {
+            if (orders[i].CheckRequest(characterName, foodName))
+            {
+                GameObject orderToDelete = customerTag[i];
+                DecreaseCustomer(customerTag[i]);
+
+                Destroy(orderToDelete);
+                Destroy(foodSelected);
+                Destroy(characterSelected);
+
+                characterSelected = null;
+                foodSelected = null;
+
+                return;
+            }
+        }
+
+        CustomerCard customer = characterSelected.GetComponent<CustomerCard>();
+        FoodCard food = foodSelected.GetComponent<FoodCard>();
+        customer.HideCard();
+        food.HideCard();
+
+        characterSelected = null;
+        foodSelected = null;
     }
 }

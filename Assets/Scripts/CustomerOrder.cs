@@ -13,13 +13,11 @@ public class CustomerOrder : MonoBehaviour
     {
         characterImage.sprite = image;
         characterName = name;
-        Debug.Log("Given character");
     }
     public void AssignFood(Sprite image, string name)
     {
         foodImage.sprite = image;
         foodName = name;
-        Debug.Log("Given food");
     }
 
     public bool CheckRequest(string characterChoosen, string foodChoosen)
