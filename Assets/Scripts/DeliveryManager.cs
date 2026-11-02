@@ -28,9 +28,16 @@ public class DeliveryManager : MonoBehaviour
     private string characterName;
     private string foodName;
 
+    private int moneyGained;
+    private int matchTracker;
+    public GameObject resultScreen, currentScene, nextScene;
+    public TextMeshProUGUI moneyText, happinessText, socialText;
+    public GameDirector gameDirector;
+
     void Start()
     {
         CreateOrder();
+        moneyGained = 0;
     }
 
     private void CreateOrder()
@@ -61,9 +68,11 @@ public class DeliveryManager : MonoBehaviour
     {
         customerCounter.text = customers.ToString();
 
-        for (int i = 0; i < totalActiveOrder; i++)
+        int activeOrders = Mathf.Min(totalActiveOrder, customerTag.Count);
+
+        for (int i = 0; i < customerTag.Count; i++)
         {
-            customerTag[i].SetActive(true);
+            customerTag[i].SetActive(i < activeOrders);
         }
     }
     public void DecreaseCustomer(GameObject orderToRemove)
@@ -80,66 +89,62 @@ public class DeliveryManager : MonoBehaviour
 
     public void CreateCards()
     {
-        int totalCards = cardSlots.Length;
-        int CCards = totalCards/2, FCards = totalCards/2;
-        GameObject card;
-
         List<Sprite> cSprites = new List<Sprite>();
         List<string> cNames = new List<string>();
         List<Sprite> fSprites = new List<Sprite>();
         List<string> fNames = new List<string>();
-        List<CustomerOrder> tempOrders = new List<CustomerOrder>(orders);
 
-        for ( int i = 0; i < totalCards; i++ )
+        // Maximum of 9 orders, limited by available card slots
+        int ordersToUse = Mathf.Min(9, orders.Count, cardSlots.Length / 2);
+
+        matchTracker = 0;
+
+        // Get character and food information
+        for (int i = 0; i < ordersToUse; i++)
         {
-            int orderIndex = Random.Range(0, tempOrders.Count);
-            cSprites.Add(tempOrders[orderIndex].GetCharacterImage());
-            cNames.Add(tempOrders[orderIndex].GetCharacterName());
-            fSprites.Add(tempOrders[orderIndex].GetFoodImage());
-            fNames.Add(tempOrders[orderIndex].GetFoodName());
-            tempOrders.RemoveAt(orderIndex);
+            cSprites.Add(orders[i].GetCharacterImage());
+            cNames.Add(orders[i].GetCharacterName());
+
+            fSprites.Add(orders[i].GetFoodImage());
+            fNames.Add(orders[i].GetFoodName());
         }
-        
-        for ( int i = 0 ; i < totalCards ; i++ )
+
+        int CCards = ordersToUse;
+        int FCards = ordersToUse;
+
+        int totalCards = CCards + FCards;
+
+        for (int i = 0; i < totalCards; i++)
         {
-            if (CCards != 0 || FCards != 0)
+            GameObject card;
+
+            if (CCards > 0 && (FCards == 0 || Random.value < 0.5f))
             {
-                if (Random.value < 0.5f)
-                {
-                    card = Instantiate(characterCard, cardSlots[i].transform);
-                    int characterIndex = Random.Range(0, cSprites.Count);
-                    CustomerCard cCard = card.GetComponent<CustomerCard>();
-                    cCard.PassCharacter(cSprites[characterIndex], cNames[characterIndex]);
-                    cSprites.RemoveAt(characterIndex);
-                    cNames.RemoveAt(characterIndex);
-                }
-                else
-                {
-                    card = Instantiate( foodCard, cardSlots[i].transform);
-                    int foodIndex = Random.Range(0, fSprites.Count);
-                    FoodCard fCard = card.GetComponent<FoodCard>();
-                    fCard.PassFood(fSprites[foodIndex], fNames[foodIndex]);
-                    fSprites.RemoveAt(foodIndex);
-                    fNames.RemoveAt(foodIndex);
-                }
-            }
-            else if (CCards == 0)
-            {
-                card = Instantiate(foodCard, cardSlots[i].transform);
-                int foodIndex = Random.Range(0, fSprites.Count);
-                FoodCard fCard = card.GetComponent<FoodCard>();
-                fCard.PassFood(fSprites[foodIndex], fNames[foodIndex]);
-                fSprites.RemoveAt(foodIndex);
-                fNames.RemoveAt(foodIndex);
+                card = Instantiate(characterCard, cardSlots[i].transform);
+
+                int index = Random.Range(0, cSprites.Count);
+
+                CustomerCard cCard = card.GetComponent<CustomerCard>();
+                cCard.PassCharacter(cSprites[index], cNames[index], this);
+
+                cSprites.RemoveAt(index);
+                cNames.RemoveAt(index);
+
+                CCards--;
             }
             else
             {
-                card = Instantiate(characterCard, cardSlots[i].transform);
-                int characterIndex = Random.Range(0, cSprites.Count);
-                CustomerCard cCard = card.GetComponent<CustomerCard>();
-                cCard.PassCharacter(cSprites[characterIndex], cNames[characterIndex]);
-                cSprites.RemoveAt(characterIndex);
-                cNames.RemoveAt(characterIndex);
+                card = Instantiate(foodCard, cardSlots[i].transform);
+
+                int index = Random.Range(0, fSprites.Count);
+
+                FoodCard fCard = card.GetComponent<FoodCard>();
+                fCard.PassFood(fSprites[index], fNames[index], this);
+
+                fSprites.RemoveAt(index);
+                fNames.RemoveAt(index);
+
+                FCards--;
             }
         }
     }
@@ -172,7 +177,9 @@ public class DeliveryManager : MonoBehaviour
     {
         if (characterSelected == null || foodSelected == null) return;
 
-        for (int i = 0; i < totalActiveOrder; i++)
+        int visibleOrders = Mathf.Min(totalActiveOrder, orders.Count);
+
+        for (int i = 0; i < visibleOrders; i++)
         {
             if (orders[i].CheckRequest(characterName, foodName))
             {
@@ -186,6 +193,10 @@ public class DeliveryManager : MonoBehaviour
                 characterSelected = null;
                 foodSelected = null;
 
+                matchTracker++;
+                moneyGained += 15;
+                CheckProgress();
+
                 return;
             }
         }
@@ -197,5 +208,30 @@ public class DeliveryManager : MonoBehaviour
 
         characterSelected = null;
         foodSelected = null;
+    }
+
+    private void CheckProgress()
+    {
+        if (matchTracker == 9)
+        {
+            CreateCards();
+            happinessText.text += "-";
+            gameDirector.HappinessModify(0.1f);
+        }
+        else if (customerTag.Count == 0)
+        {
+            resultScreen.SetActive(true);
+            moneyText.text = "$ " + moneyGained.ToString();
+            socialText.text = "-";
+        }
+    }
+
+    public void ChangeScene()
+    {
+        gameDirector.MoneyModify(moneyGained);
+        gameDirector.SocialModify(0.1f);
+        gameDirector.TriggerSceneChange(currentScene, nextScene);
+        gameDirector.StatPanelSwitch(true);
+        resultScreen.SetActive(false);
     }
 }

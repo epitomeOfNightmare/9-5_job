@@ -16,10 +16,11 @@ public class CustomerCard : MonoBehaviour
         StartCoroutine(PeekCard());
     }
 
-    public void PassCharacter(Sprite image, string name)
+    public void PassCharacter(Sprite image, string name, DeliveryManager dm)
     {
         characterImage = image;
         selectedCharacter = name;
+        deliveryManager = dm;
     }
 
     public void ShowCard()

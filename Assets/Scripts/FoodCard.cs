@@ -17,10 +17,11 @@ public class FoodCard : MonoBehaviour
         StartCoroutine(PeekCard());
     }
 
-    public void PassFood(Sprite image, string name)
+    public void PassFood(Sprite image, string name, DeliveryManager dm)
     {
         foodImage = image;
         selectedFood = name;
+        deliveryManager = dm;
     }
 
     public void ShowCard()
