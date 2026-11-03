@@ -150,7 +150,7 @@ MonoBehaviour:
   foodCover: {fileID: 21300000, guid: 030df0127be646a4886b2a9e6f6f939b, type: 3}
   foodImage: {fileID: 0}
   deliveryManager: {fileID: 0}
-  rotateDuration: 1
+  rotateDuration: 0.5
 --- !u!1 &6826073862688832793
 GameObject:
   m_ObjectHideFlags: 0

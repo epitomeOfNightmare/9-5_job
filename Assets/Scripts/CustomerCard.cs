@@ -101,7 +101,7 @@ public class CustomerCard : MonoBehaviour
 
         transform.localRotation = endPoint;
         timePassed = 0f;
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(1f);
 
         while (timePassed < rotateDuration)
         {

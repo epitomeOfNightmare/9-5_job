@@ -150,7 +150,7 @@ MonoBehaviour:
   characterCover: {fileID: 21300000, guid: 84dd97fe86132ae45803ef9ac4413424, type: 3}
   characterImage: {fileID: 0}
   deliveryManager: {fileID: 0}
-  rotateDuration: 1
+  rotateDuration: 0.5
 --- !u!1 &9045446027898291427
 GameObject:
   m_ObjectHideFlags: 0
